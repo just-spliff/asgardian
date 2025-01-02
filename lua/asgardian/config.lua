@@ -1,3 +1,5 @@
+-- lua/gods-theme/config.lua
+
 local M = {}
 
 -- Domyślne ustawienia
