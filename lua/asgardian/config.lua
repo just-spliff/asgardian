@@ -1,13 +1,13 @@
 local M = {}
 
--- Domyślna konfiguracja
-M.config = {
-	god = "thor", -- Domyślny motyw
-	transparent = false, -- Domyślne tło
+-- Domyślne ustawienia
+M.options = {
+	theme = "loki", -- Motywy: loki, thor, odyn
+	transparent = false,
 }
 
-M.setup = function(opts)
-	M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+function M.set(user_opts)
+	M.options = vim.tbl_extend("force", M.options, user_opts or {})
 end
 
 return M

@@ -1,24 +1,27 @@
 local config = require("asgardian.config")
+local utils = require("asgardian.utils")
+
 local M = {}
 
-M.setup = function(opts)
-	config.setup(opts)
+function M.load()
+	local theme = require("asgardian.gods." .. config.options.theme)
+	local colors = theme.get_colors()
 
-	local god = config.config.god:lower()
-	local transparent = config.config.transparent
-
-	-- Wczytaj wybranego "boga"
-	local success, theme = pcall(require, "asgardian.gods." .. god)
-	if not success then
-		vim.api.nvim_err_writeln("Asgardian: Invalid god theme '" .. god .. "'")
-		return
+	if config.options.transparent then
+		colors.bg = "NONE"
 	end
 
-	-- Załaduj motyw
-	theme.load(transparent)
+	-- Definicje grup
+	local highlights = {
+		Normal = { bg = colors.bg, fg = colors.fg },
+		Comment = { fg = colors.comment, italic = true },
+		Keyword = { fg = colors.keyword, bold = true },
+		String = { fg = colors.string },
+		Error = { fg = colors.error, bold = true },
+	}
 
-	-- Dynamiczne ustawienia składni
-	require("asgardian.syntax").apply(god)
+	-- Zastosuj kolory
+	utils.set_highlights(highlights)
 end
 
 return M
