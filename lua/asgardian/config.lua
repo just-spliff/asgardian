@@ -1,8 +1,13 @@
--- ~/.config/nvim/lua/asgardian/config.lua
-local asgardian = require("asgardian")
+local M = {}
 
--- Ustawienie motywu "thor" z transparentnym tłem
-asgardian.setup({
-	theme = "thor", -- Wybór tematu: "thor", "loki", "odyn"
-	transparent_background = true, -- Włączenie transparentnego tła
-})
+-- Domyślna konfiguracja
+M.config = {
+	god = "thor", -- Domyślny motyw
+	transparent = false, -- Domyślne tło
+}
+
+M.setup = function(opts)
+	M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+end
+
+return M
