@@ -3,7 +3,6 @@ local M = {}
 
 -- Funkcja do wczytania odpowiedniego pliku tematu
 local function load_theme(theme)
-	-- Zmienna zawierająca ścieżkę do folderu z motywami
 	local theme_path = "asgardian.themes." .. theme
 	local ok, theme_module = pcall(require, theme_path)
 
@@ -45,18 +44,5 @@ M.setup = function(opts)
 	-- Zastosowanie opcji konfiguracyjnych
 	M.apply_options(opts)
 end
-
--- Tworzenie komendy do zmiany motywu
-vim.api.nvim_create_user_command("AsgardianTheme", function(opts)
-	local theme = opts.args or "odyn" -- Domyślnie odyn
-	M.setup({ theme = theme })
-end, {
-	nargs = 1,
-	complete = function(line)
-		return vim.tbl_filter(function(val)
-			return vim.startswith(val, line)
-		end, { "loki", "thor", "odyn" })
-	end,
-})
 
 return M
