@@ -1,48 +1,44 @@
--- asgardian/init.lua
+-- ~/.config/nvim/lua/asgardian/init.lua
 local M = {}
 
--- Funkcja do wczytania odpowiedniego pliku tematu
+-- Ładowanie tematu (motywu)
 local function load_theme(theme)
 	local theme_path = "asgardian.themes." .. theme
 	local ok, theme_module = pcall(require, theme_path)
 
 	if not ok then
-		-- Jeśli motyw nie istnieje, domyślnie wczytujemy motyw "odyn"
+		-- Jeśli temat nie istnieje, wczytujemy domyślny temat "odyn"
 		theme_module = require("asgardian.themes.odyn")
 	end
 
 	return theme_module.palette
 end
 
--- Funkcja do ustawienia grup highlight na podstawie motywu
-function M.setup_highlights(colors)
-	return {
-		Normal = { fg = colors.fg, bg = colors.bg },
-		-- Możesz zdefiniować inne grupy highlight, jak np. dla komentarzy, zmiennych itd.
-	}
-end
-
--- Funkcja do aplikowania konfiguracji
-function M.apply_options(opts)
-	-- Możesz dodać inne opcje konfiguracyjne, jak integracje z wtyczkami itd.
-end
-
--- Główna funkcja konfiguracji
+-- Funkcja konfiguracji
 M.setup = function(opts)
 	opts = opts or {}
 
-	-- Wybór tematu
-	local current_theme = opts.theme or "odyn" -- Domyślnie odyn
+	-- Wybór motywu
+	local current_theme = opts.theme or "odyn" -- Domyślnie "odyn"
 	local colors = load_theme(current_theme)
 
-	-- Zastosowanie grup highlight
-	local highlights = M.setup_highlights(colors)
+	-- Transparentne tło, jeśli opcja jest włączona
+	if opts.transparent_background then
+		vim.cmd("hi Normal guibg=NONE")
+		vim.cmd("hi NonText guibg=NONE")
+		vim.cmd("hi EndOfBuffer guibg=NONE")
+	end
+
+	-- Zastosowanie kolorów
+	local highlights = {
+		Normal = { fg = colors.fg, bg = colors.bg },
+		-- Możesz dodać inne grupy highlight np. komentarze, zmienne
+	}
+
+	-- Zastosowanie grup highlight w Neovim
 	for group, settings in pairs(highlights) do
 		vim.api.nvim_set_hl(0, group, settings)
 	end
-
-	-- Zastosowanie opcji konfiguracyjnych
-	M.apply_options(opts)
 end
 
 return M
